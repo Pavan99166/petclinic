@@ -53,6 +53,12 @@ pipeline {
             }
         }
 
+        stage('Keeping application up for 2 mins') {
+            steps {
+                keepApplicationUp2min()
+            }
+        }
+
         stage('Gracefully Stop Spring Boot App') {
             steps {
                 stopApplication()
