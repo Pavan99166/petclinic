@@ -37,7 +37,7 @@ pipeline {
         stage('Build with Maven') {
             steps {
                 scripts {
-                pipeline1.setup_build(
+                pipeline1.setup_build()
 			}
             }
         }
