@@ -1,7 +1,7 @@
 @Library('my-shared-library@main') _ 
 
 pipeline {
-    agent { label 'dev' }
+    agent { label 'dev1' }
 
     environment {
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
@@ -12,63 +12,63 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                checkoutCode()
+                pipeline1.check_out()
             }
         }
 
         stage('Set up Java 1') {
             steps {
-                setupJava()
+                pipeline1.setup_java()
             }
         }
 
         stage('Set up Maven') {
             steps {
-                setupMaven()
+                pipeline1.setup_maven()
             }
         }
 
         stage('Build with Maven') {
             steps {
-                buildProject()
+                pipeline1.setup_build()
             }
         }
 
         stage('Upload Artifact') {
             steps {
                 echo 'Uploading artifact...'
-                archiveArtifacts artifacts: 'target/petclinic-0.0.1-SNAPSHOT.jar', allowEmptyArchive: true
+                pipeline1.upload_artifact(String artifactPath)
             }
         }
 
         stage('Run Application') {
             steps {
-                runApplication()
+                pipeline1.run_application()
             }
         }
 
         stage('Validate App is Running') {
             steps {
-                validateApp()
+                pipeline1.validate_app()
             }
         }
 
         stage('Keeping application up for 2 mins') {
             steps {
-                keepApplicationUp2min()
+                pipeline1.keep_app()
             }
         }
 
         stage('Gracefully Stop Spring Boot App') {
             steps {
-                stopApplication()
+                pipeline1.stop_app()
             }
         }
     }
 
     post {
         always {
-            cleanup()
-        }
+            pipeline1.clean_app() 
+		}
     }
 }
