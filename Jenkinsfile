@@ -1,7 +1,7 @@
-@Library('my-shared-library@main') _
+@Library('my-shared-library@main') _   // Correct syntax
 
 pipeline {
-    agent { label 'dev' }
+    agent { label 'dev2' }
 
     environment {
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
@@ -12,79 +12,76 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-		scripts {
-                pipeline1.check_out()
-			}
-            }
-        }
-
+		script {
+			pipeline1.checkscm()
+		}		
+       	}
+     }
         stage('Set up Java 17') {
             steps {
-                scripts {
-                pipeline1.setup_java()
-			}
+                script {
+                	pipeline1.setupjava()
+                }
             }
-        }
+	}
 
         stage('Set up Maven') {
             steps {
-                scripts {
-                pipeline1.setup_maven()
-			}
+                script {
+                	pipeline1.mavensetup()
+		}
             }
         }
 
         stage('Build with Maven') {
             steps {
-                scripts {
-                pipeline1.setup_build()
-			}
+                script {
+			pipeline1.build()
+		}
             }
         }
 
         stage('Upload Artifact') {
             steps {
-                echo 'Uploading artifact...'
-                pipeline1.upload_artifact(String artifactPath)
+                uploadArtifact('target/bus-booking-app-1.0-SNAPSHOT.jar')
             }
         }
 
         stage('Run Application') {
             steps {
-                scripts {
-                pipeline1.run_application()
-			}
+                script {
+				pipeline1.runApp()
+				}
             }
         }
 
         stage('Validate App is Running') {
-            steps {
-                scripts {
-                pipeline1.validate_app()
+          	steps {
+               	script {
+					pipeline1.validateApp()
+				}
 			}
-            }
         }
-		
-		stage('Keeping application up for 2 mins') {
-            steps {
-				scripts {
-                pipeline1.keep_app()
+        stage('wait') {
+			steps {
+				script {
+					pipeline1.waiting()
+				}
 			}
-            }
         }
-
-        stage('Gracefully Stop Spring Boot App') {
-            steps {
-                scripts {
-                pipeline1.stop_app()
+        stage('stoping') {
+			steps {
+				script {
+					pipeline1.stop()
+				}
 			}
-            }
         }
-    }
-
-    post {
-        always {
-            pipeline1.clean_app()
-        }
+         stage('cleaning') {
+			steps {
+				script {
+					pipeline1.clean()
+				}
+			}
+        }        
     }
 }
